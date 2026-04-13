@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบันทึกพฤติกรรม</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+        input, select { width: 100%; padding: 8px; margin: 8px 0 20px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>บันทึกพฤติกรรมนักเรียน</h2>
+    
+    <form id="behaviorForm">
+        <label>ชื่อ-สกุล นักเรียน:</label>
+        <input type="text" id="studentName" placeholder="เช่น นายสมชาย รักเรียน" required>
+
+        <label>ระดับชั้น:</label>
+        <select id="studentClass">
+            <option value="ม.4">ม.4</option>
+            <option value="ม.5">ม.5</option>
+        </select>
+
+        <label>รายละเอียดพฤติกรรม:</label>
+        <input type="text" id="behavior" placeholder="เช่น ส่งงานตรงเวลา, ขาดเรียน" required>
+
+        <button type="submit">บันทึกข้อมูลลงฐานระบบ</button>
+    </form>
+
+    <script>
+        // *** นำ URL ที่ได้จาก Apps Script (ส่วนที่ 1) มาวางในเครื่องหมายคำพูดด้านล่างนี้ ***
+        const APPS_SCRIPT_URL = 'วาง_URL_WEB_APP_ตรงนี้';
+
+        document.getElementById('behaviorForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // ป้องกันไม่ให้หน้าเว็บรีเฟรชตอนกดปุ่ม
+
+            // 1. รวบรวมข้อมูลจากช่องต่างๆ ในฟอร์ม
+            const data = {
+                studentName: document.getElementById('studentName').value,
+                studentClass: document.getElementById('studentClass').value,
+                behavior: document.getElementById('behavior').value
+            };
+
+            // 2. ส่งข้อมูลข้ามเซิร์ฟเวอร์ด้วยคำสั่ง fetch
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // โหมดนี้จำเป็นมากเพื่อไม่ให้เบราว์เซอร์บล็อกการส่งข้อมูลข้ามไปยัง Google
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+                document.getElementById('behaviorForm').reset(); // เคลียร์ช่องข้อความให้ว่าง
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            });
+        });
+    </script>
+
+</body>
+</html>
