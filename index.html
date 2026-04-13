@@ -3,64 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบบันทึกพฤติกรรม</title>
+    <title>เข้าสู่ระบบ | ระบบบันทึกพฤติกรรม</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
-        input, select { width: 100%; padding: 8px; margin: 8px 0 20px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        /* ตั้งค่าพื้นฐาน */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif; /* ใช้ฟอนต์ภาษาไทยที่ดูทันสมัย */
+        }
+
+        /* พื้นหลังไล่สีแบบ Modern */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* กล่อง Login สไตล์ Glassmorphism */
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px); /* เอฟเฟกต์กระจกฝ้า */
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .login-container h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .login-container p {
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ช่องกรอกข้อมูล */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* เอฟเฟกต์ตอนคลิกที่ช่องกรอก */
+        .input-group input:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        /* ปุ่ม Login */
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ffffff;
+            color: #764ba2;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: #f1f1f1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
 
-    <h2>บันทึกพฤติกรรมนักเรียน</h2>
-    
-    <form id="behaviorForm">
-        <label>ชื่อ-สกุล นักเรียน:</label>
-        <input type="text" id="studentName" placeholder="เช่น นายสมชาย รักเรียน" required>
+    <div class="login-container">
+        <h2>ระบบจัดการข้อมูล</h2>
+        <p>สำหรับบุคลากรที่ได้รับอนุญาตเท่านั้น</p>
 
-        <label>ระดับชั้น:</label>
-        <select id="studentClass">
-            <option value="ม.4">ม.4</option>
-            <option value="ม.5">ม.5</option>
-        </select>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">ชื่อผู้ใช้งาน (Username)</label>
+                <input type="text" id="username" placeholder="กรอกชื่อผู้ใช้งาน" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">รหัสผ่าน (Password)</label>
+                <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required>
+            </div>
 
-        <label>รายละเอียดพฤติกรรม:</label>
-        <input type="text" id="behavior" placeholder="เช่น ส่งงานตรงเวลา, ขาดเรียน" required>
-
-        <button type="submit">บันทึกข้อมูลลงฐานระบบ</button>
-    </form>
+            <button type="submit" class="login-btn">เข้าสู่ระบบ</button>
+        </form>
+    </div>
 
     <script>
-        // *** นำ URL ที่ได้จาก Apps Script (ส่วนที่ 1) มาวางในเครื่องหมายคำพูดด้านล่างนี้ ***
-        const APPS_SCRIPT_URL = 'วาง_URL_WEB_APP_ตรงนี้';
-
-        document.getElementById('behaviorForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // ป้องกันไม่ให้หน้าเว็บรีเฟรชตอนกดปุ่ม
-
-            // 1. รวบรวมข้อมูลจากช่องต่างๆ ในฟอร์ม
-            const data = {
-                studentName: document.getElementById('studentName').value,
-                studentClass: document.getElementById('studentClass').value,
-                behavior: document.getElementById('behavior').value
-            };
-
-            // 2. ส่งข้อมูลข้ามเซิร์ฟเวอร์ด้วยคำสั่ง fetch
-            fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // โหมดนี้จำเป็นมากเพื่อไม่ให้เบราว์เซอร์บล็อกการส่งข้อมูลข้ามไปยัง Google
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(() => {
-                alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
-                document.getElementById('behaviorForm').reset(); // เคลียร์ช่องข้อความให้ว่าง
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-            });
+        // โค้ดส่วนนี้เตรียมไว้สำหรับเชื่อมต่อกับ Apps Script ในอนาคต
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            // ตรงนี้สามารถเขียนโค้ด fetch() ส่งข้อมูลไปให้ Apps Script ตรวจสอบรหัสผ่านได้เลย
+            console.log("พยายามเข้าสู่ระบบด้วย:", user);
+            alert("เดี๋ยวเราจะเอาข้อมูลนี้ไปเช็คสิทธิ์กับ Apps Script อีกทีครับ!");
         });
     </script>
 
