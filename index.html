@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เข้าสู่ระบบ | ระบบบันทึกพฤติกรรม</title>
+    <title>เข้าสู่ระบบ | ระบบจัดการพฤติกรรมนักเรียน</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         /* ตั้งค่าพื้นฐาน */
@@ -11,16 +11,26 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Prompt', sans-serif; /* ใช้ฟอนต์ภาษาไทยที่ดูทันสมัย */
+            font-family: 'Prompt', sans-serif;
         }
 
-        /* พื้นหลังไล่สีแบบ Modern */
+        /* พื้นหลังไล่สี น้ำเงิน-ชมพู แบบ Animation */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* กำหนดสีน้ำเงิน และ ชมพู */
+            background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #ec4899, #be185d);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        /* คีย์เฟรมสำหรับทำภาพเคลื่อนไหวพื้นหลัง */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* กล่อง Login สไตล์ Glassmorphism */
@@ -32,23 +42,36 @@
             padding: 40px;
             border-radius: 20px;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            max-width: 420px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
             text-align: center;
             color: #ffffff;
         }
 
+        /* ส่วนของโลโก้โรงเรียน */
+        .logo-box img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.2); /* สีพื้นหลังเผื่อรูประบบโปร่งใส */
+            padding: 5px;
+        }
+
         .login-container h2 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .login-container p {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 300;
-            margin-bottom: 30px;
-            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.5px;
         }
 
         /* ช่องกรอกข้อมูล */
@@ -61,7 +84,7 @@
             display: block;
             font-size: 14px;
             margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
         }
 
         .input-group input {
@@ -77,14 +100,13 @@
         }
 
         .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        /* เอฟเฟกต์ตอนคลิกที่ช่องกรอก */
         .input-group input:focus {
             background: rgba(255, 255, 255, 0.25);
             border-color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         /* ปุ่ม Login */
@@ -92,7 +114,7 @@
             width: 100%;
             padding: 12px;
             background: #ffffff;
-            color: #764ba2;
+            color: #be185d; /* ปรับสีตัวอักษรปุ่มให้เข้ากับโทนชมพู */
             border: none;
             border-radius: 10px;
             font-size: 16px;
@@ -100,24 +122,49 @@
             cursor: pointer;
             transition: 0.3s;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .login-btn:hover {
-            background: #f1f1f1;
+            background: #fdf2f8;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
 
         .login-btn:active {
             transform: translateY(0);
+        }
+
+        /* ลิงก์เพิ่มเติม (ลืมรหัสผ่าน / ติดต่อแอดมิน) */
+        .extra-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+
+        .extra-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: 0.2s;
+            font-weight: 300;
+        }
+
+        .extra-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
     <div class="login-container">
-        <h2>ระบบจัดการข้อมูล</h2>
-        <p>สำหรับบุคลากรที่ได้รับอนุญาตเท่านั้น</p>
+        <div class="logo-box">
+            <img src="https://via.placeholder.com/150/ffffff/cccccc?text=LOGO" alt="โลโก้โรงเรียน">
+        </div>
+
+        <h2>ระบบจัดการพฤติกรรมนักเรียน</h2>
+        <p>Student Behavior Management System</p>
 
         <form id="loginForm">
             <div class="input-group">
@@ -132,18 +179,34 @@
 
             <button type="submit" class="login-btn">เข้าสู่ระบบ</button>
         </form>
+
+        <div class="extra-links">
+            <a href="#" id="forgotPasswordBtn">ลืมรหัสผ่าน?</a>
+            <a href="#" id="contactAdminBtn">ติดต่อผู้ดูแลระบบ</a>
+        </div>
     </div>
 
     <script>
-        // โค้ดส่วนนี้เตรียมไว้สำหรับเชื่อมต่อกับ Apps Script ในอนาคต
+        // จัดการเหตุการณ์ตอนกดปุ่มเข้าสู่ระบบ
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
             const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            
-            // ตรงนี้สามารถเขียนโค้ด fetch() ส่งข้อมูลไปให้ Apps Script ตรวจสอบรหัสผ่านได้เลย
             console.log("พยายามเข้าสู่ระบบด้วย:", user);
-            alert("เดี๋ยวเราจะเอาข้อมูลนี้ไปเช็คสิทธิ์กับ Apps Script อีกทีครับ!");
+            alert("พร้อมส่งข้อมูลรหัสผ่านไปตรวจสอบสิทธิ์ครับ!");
+        });
+
+        // จัดการเหตุการณ์ตอนกดปุ่มลืมรหัสผ่าน
+        document.getElementById('forgotPasswordBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert("กรุณาติดต่อผู้ดูแลระบบเพื่อทำการรีเซ็ตรหัสผ่านใหม่ครับ");
+        });
+
+        // จัดการเหตุการณ์ตอนกดปุ่มติดต่อผู้ดูแลระบบ
+        document.getElementById('contactAdminBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            // สามารถเปลี่ยนให้เปิดลิงก์ Line หรือ Facebook ของแอดมินได้ เช่น:
+            // window.open('https://line.me/ti/p/~your_line_id', '_blank');
+            alert("ช่องทางการติดต่อผู้ดูแลระบบ: แผนกไอที/กิจการนักเรียน");
         });
     </script>
 
