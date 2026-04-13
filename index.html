@@ -14,29 +14,55 @@
             font-family: 'Prompt', sans-serif;
         }
 
-        /* พื้นหลังไล่สี น้ำเงิน-ชมพู แบบ Animation */
+        /* ส่วนของพื้นหลังหลัก (สีน้ำเงิน-ชมพู) */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* กำหนดสีน้ำเงิน และ ชมพู */
             background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #ec4899, #be185d);
             background-size: 400% 400%;
-            animation: gradientBG 10s ease infinite;
+            /* ปรับให้ช้าลงจาก 10s เป็น 30s */
+            animation: gradientBG 30s ease infinite;
+            position: relative;
+            overflow: hidden; /* ป้องกันแถบเลื่อนที่เกิดจากพื้นหลัง */
         }
 
-        /* คีย์เฟรมสำหรับทำภาพเคลื่อนไหวพื้นหลัง */
+        /* เลเยอร์ที่ 2: ลายตารางหมากรุกแบบใส (เคลื่อนที่) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; /* ให้อยู่หลังกล่อง Login */
+            /* สร้างลายตารางหมากรุกแบบใส */
+            background-image: conic-gradient(
+                rgba(255, 255, 255, 0.05) 90deg,
+                transparent 90deg 180deg,
+                rgba(255, 255, 255, 0.05) 180deg 270deg,
+                transparent 270deg
+            );
+            background-size: 60px 60px; /* ขนาดตาราง */
+            /* อนิเมชันเคลื่อนที่ไปพร้อมกับสี */
+            animation: moveCheckerboard 30s linear infinite;
+        }
+
+        /* อนิเมชันสำหรับไล่สี */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
+        /* อนิเมชันสำหรับตารางหมากรุก (เคลื่อนที่แนวทแยงแบบไร้รอยต่อ) */
+        @keyframes moveCheckerboard {
+            0% { background-position: 0px 0px; }
+            100% { background-position: 120px 120px; }
+        }
+
         /* กล่อง Login สไตล์ Glassmorphism */
         .login-container {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px); /* เอฟเฟกต์กระจกฝ้า */
+            backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 40px;
@@ -46,6 +72,7 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
             text-align: center;
             color: #ffffff;
+            z-index: 1; /* ให้อยู่เหนือพื้นหลัง */
         }
 
         /* ส่วนของโลโก้โรงเรียน */
@@ -56,8 +83,9 @@
             border-radius: 50%;
             border: 3px solid rgba(255, 255, 255, 0.5);
             margin-bottom: 15px;
-            background-color: rgba(255, 255, 255, 0.2); /* สีพื้นหลังเผื่อรูประบบโปร่งใส */
+            background-color: rgba(255, 255, 255, 0.2);
             padding: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .login-container h2 {
@@ -114,7 +142,7 @@
             width: 100%;
             padding: 12px;
             background: #ffffff;
-            color: #be185d; /* ปรับสีตัวอักษรปุ่มให้เข้ากับโทนชมพู */
+            color: #be185d;
             border: none;
             border-radius: 10px;
             font-size: 16px;
@@ -204,8 +232,6 @@
         // จัดการเหตุการณ์ตอนกดปุ่มติดต่อผู้ดูแลระบบ
         document.getElementById('contactAdminBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            // สามารถเปลี่ยนให้เปิดลิงก์ Line หรือ Facebook ของแอดมินได้ เช่น:
-            // window.open('https://line.me/ti/p/~your_line_id', '_blank');
             alert("ช่องทางการติดต่อผู้ดูแลระบบ: แผนกไอที/กิจการนักเรียน");
         });
     </script>
