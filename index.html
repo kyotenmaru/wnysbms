@@ -6,7 +6,9 @@
     <title>เข้าสู่ระบบ | ระบบจัดการพฤติกรรมนักเรียน</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* ตั้งค่าพื้นฐาน */
+        /* =========================================
+           ตั้งค่าพื้นฐาน
+           ========================================= */
         * {
             margin: 0;
             padding: 0;
@@ -14,97 +16,107 @@
             font-family: 'Prompt', sans-serif;
         }
 
-        /* ส่วนของพื้นหลังหลัก (สีน้ำเงิน-ชมพู) */
+        /* =========================================
+           พื้นหลัง & อนิเมชัน
+           ========================================= */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #ec4899, #be185d);
+            /* โทนสีใหม่: น้ำเงินเข้มจัด ไล่ไปหาชมพูเข้ม/แดงเบอร์กันดี */
+            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #831843, #4c0519);
             background-size: 400% 400%;
-            /* ปรับให้ช้าลงจาก 10s เป็น 30s */
-            animation: gradientBG 30s ease infinite;
+            /* ปรับความเร็วให้ช้าลงเป็น 60 วินาที เพื่อความนุ่มนวล */
+            animation: gradientBG 60s ease infinite;
             position: relative;
-            overflow: hidden; /* ป้องกันแถบเลื่อนที่เกิดจากพื้นหลัง */
+            overflow: hidden; 
+            padding: 20px; /* เพิ่ม padding เผื่อจอเล็กสุดขอบ */
         }
 
-        /* เลเยอร์ที่ 2: ลายตารางหมากรุกแบบใส (เคลื่อนที่) */
+        /* ลายตารางหมากรุกแบบใส */
         body::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; /* ให้อยู่หลังกล่อง Login */
-            /* สร้างลายตารางหมากรุกแบบใส */
+            z-index: -1; 
+            /* ปรับความใสให้จางลงอีก เพื่อเข้ากับพื้นหลังสีเข้ม */
             background-image: conic-gradient(
-                rgba(255, 255, 255, 0.05) 90deg,
+                rgba(255, 255, 255, 0.025) 90deg,
                 transparent 90deg 180deg,
-                rgba(255, 255, 255, 0.05) 180deg 270deg,
+                rgba(255, 255, 255, 0.025) 180deg 270deg,
                 transparent 270deg
             );
-            background-size: 60px 60px; /* ขนาดตาราง */
-            /* อนิเมชันเคลื่อนที่ไปพร้อมกับสี */
-            animation: moveCheckerboard 30s linear infinite;
+            background-size: 60px 60px; 
+            animation: moveCheckerboard 60s linear infinite;
         }
 
-        /* อนิเมชันสำหรับไล่สี */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* อนิเมชันสำหรับตารางหมากรุก (เคลื่อนที่แนวทแยงแบบไร้รอยต่อ) */
         @keyframes moveCheckerboard {
             0% { background-position: 0px 0px; }
             100% { background-position: 120px 120px; }
         }
 
-        /* กล่อง Login สไตล์ Glassmorphism */
+        /* =========================================
+           กล่อง Login (Glassmorphism)
+           ========================================= */
         .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08); /* ปรับให้โปร่งแสงเข้ากับสีเข้ม */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 45px 40px;
+            border-radius: 24px;
+            /* ปรับแต่งให้เข้ากับทุกหน้าจอ (Responsive) */
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            max-width: 440px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
             text-align: center;
             color: #ffffff;
-            z-index: 1; /* ให้อยู่เหนือพื้นหลัง */
+            z-index: 1; 
         }
 
-        /* ส่วนของโลโก้โรงเรียน */
+        /* โลโก้ */
         .logo-box img {
             width: 90px;
             height: 90px;
             object-fit: cover;
             border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.5);
-            margin-bottom: 15px;
-            background-color: rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 5px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-box img:hover {
+            transform: scale(1.05); /* เอฟเฟกต์ตอนชี้เมาส์ที่โลโก้ */
         }
 
         .login-container h2 {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .login-container p {
             font-size: 13px;
             font-weight: 300;
-            margin-bottom: 25px;
-            color: rgba(255, 255, 255, 0.85);
-            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 1px;
         }
 
         /* ช่องกรอกข้อมูล */
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             text-align: left;
         }
 
@@ -112,75 +124,109 @@
             display: block;
             font-size: 14px;
             margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.95);
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 400;
         }
 
         .input-group input {
             width: 100%;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             color: #ffffff;
             font-size: 16px;
             outline: none;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
         .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .input-group input:focus {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.15);
             border-color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
         /* ปุ่ม Login */
         .login-btn {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background: #ffffff;
-            color: #be185d;
+            color: #831843; /* สีตัวอักษรกลืนกับธีมสีชมพูเข้ม */
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         .login-btn:hover {
-            background: #fdf2f8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            background: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
         }
 
         .login-btn:active {
             transform: translateY(0);
         }
 
-        /* ลิงก์เพิ่มเติม (ลืมรหัสผ่าน / ติดต่อแอดมิน) */
+        /* ลิงก์เพิ่มเติม */
         .extra-links {
             display: flex;
             justify-content: space-between;
-            margin-top: 25px;
+            margin-top: 30px;
             font-size: 13px;
         }
 
         .extra-links a {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.6);
             text-decoration: none;
-            transition: 0.2s;
+            transition: 0.3s;
             font-weight: 300;
         }
 
         .extra-links a:hover {
             color: #ffffff;
             text-decoration: underline;
+        }
+
+        /* =========================================
+           Responsive Design (สำหรับมือถือและแท็บเล็ต)
+           ========================================= */
+        @media screen and (max-width: 480px) {
+            .login-container {
+                padding: 35px 25px; /* ลด padding ลงเมื่ออยู่บนมือถือ */
+                border-radius: 20px;
+            }
+            .logo-box img {
+                width: 75px;
+                height: 75px;
+            }
+            .login-container h2 {
+                font-size: 20px;
+            }
+            .login-container p {
+                font-size: 12px;
+            }
+            .input-group input {
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+            .login-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+            .extra-links {
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 25px;
+            }
         }
     </style>
 </head>
@@ -197,12 +243,12 @@
         <form id="loginForm">
             <div class="input-group">
                 <label for="username">ชื่อผู้ใช้งาน (Username)</label>
-                <input type="text" id="username" placeholder="กรอกชื่อผู้ใช้งาน" required>
+                <input type="text" id="username" placeholder="กรอกชื่อผู้ใช้งาน" required autocomplete="username">
             </div>
             
             <div class="input-group">
                 <label for="password">รหัสผ่าน (Password)</label>
-                <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required>
+                <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required autocomplete="current-password">
             </div>
 
             <button type="submit" class="login-btn">เข้าสู่ระบบ</button>
@@ -215,21 +261,17 @@
     </div>
 
     <script>
-        // จัดการเหตุการณ์ตอนกดปุ่มเข้าสู่ระบบ
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
             const user = document.getElementById('username').value;
-            console.log("พยายามเข้าสู่ระบบด้วย:", user);
-            alert("พร้อมส่งข้อมูลรหัสผ่านไปตรวจสอบสิทธิ์ครับ!");
+            alert("พร้อมส่งข้อมูลของ " + user + " ไปตรวจสอบสิทธิ์หลังบ้านครับ!");
         });
 
-        // จัดการเหตุการณ์ตอนกดปุ่มลืมรหัสผ่าน
         document.getElementById('forgotPasswordBtn').addEventListener('click', function(e) {
             e.preventDefault();
             alert("กรุณาติดต่อผู้ดูแลระบบเพื่อทำการรีเซ็ตรหัสผ่านใหม่ครับ");
         });
 
-        // จัดการเหตุการณ์ตอนกดปุ่มติดต่อผู้ดูแลระบบ
         document.getElementById('contactAdminBtn').addEventListener('click', function(e) {
             e.preventDefault();
             alert("ช่องทางการติดต่อผู้ดูแลระบบ: แผนกไอที/กิจการนักเรียน");
