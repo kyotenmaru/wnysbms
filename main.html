@@ -178,6 +178,39 @@
             document.getElementById('academicYear').innerText = `ปีการศึกษา ${now.getMonth() < 4 ? y - 1 : y}`;
         }
         setInterval(updateDateTime, 1000); updateDateTime();
+
+        // ==========================================
+        // ท่าที่ 1: ระบบ Auto-Logout เมื่อไม่มีการใช้งาน 15 นาที
+        // ==========================================
+        let inactivityTime = function () {
+            let time;
+            // ตั้งเวลา 15 นาที (15 นาที * 60 วินาที * 1000 มิลลิวินาที)
+            const logoutTime = 5000; 
+
+            // รีเซ็ตเวลาใหม่ทุกครั้งที่มีการขยับเมาส์, คลิก, หรือกดคีย์บอร์ด
+            window.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onkeypress = resetTimer;
+            document.onclick = resetTimer;
+            document.onscroll = resetTimer;
+
+            // ฟังก์ชันเตะออก
+            function logout() {
+                alert("หมดเวลาการเชื่อมต่อ (ไม่มีการใช้งานเกิน 15 นาที) กรุณาเข้าสู่ระบบใหม่เพื่อความปลอดภัยครับ");
+                sessionStorage.clear(); // ฉีกตั๋ว Token ทิ้ง
+                window.location.href = 'index.html'; // เด้งกลับหน้า Login
+            }
+
+            // ฟังก์ชันเริ่มนับเวลาใหม่
+            function resetTimer() {
+                clearTimeout(time);
+                time = setTimeout(logout, logoutTime);
+            }
+        };
+
+        // เรียกใช้งานระบบจับเวลาทันทีที่เปิดหน้า Dashboard
+        inactivityTime();
+        
     </script>
 </body>
 </html>
