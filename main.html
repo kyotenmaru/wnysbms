@@ -18,6 +18,10 @@
         <a href="#" class="menu-item">📝 เพิ่มข้อมูลเคส</a>
         <a href="#" class="menu-item">📋 รายการทั้งหมด</a>
         <a href="#" class="menu-item">⚙️ ตั้งค่าระบบ</a>
+        
+        <div style="margin-top: auto; position: absolute; bottom: 20px; width: 100%;">
+            <a href="#" class="menu-item" id="logoutBtn" style="color: #fca5a5;">🚪 ออกจากระบบ</a>
+        </div>
     </div>
 
     <div class="main-content" id="mainContent">
@@ -51,36 +55,37 @@
                 <div class="number">...</div>
             </div>
         </div>
+
+        <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <h3 style="margin-bottom: 15px; color: #1e293b;">รายการอัปเดตล่าสุด</h3>
+            <p style="color: #64748b;">(พื้นที่สำหรับแสดงตารางข้อมูลเคสนักเรียน)</p>
+        </div>
+
     </div>
 
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPtUqT1YUbY9kBmumY5Rrcqy-ib_ShK30-NLIKtihRhIPj_wQWQyeLaiTfavuLMm2-RQ/exec';
+        const APPS_SCRIPT_URL = 'วาง_URL_API_ของคุณตรงนี้';
 
-        // 1. ตรวจสอบบัตรผ่าน (Token) ก่อนโหลดหน้า
+        // 1. ตรวจสอบ Token
         const authToken = sessionStorage.getItem('authToken');
         if (!authToken) {
-            window.location.href = 'index.html'; // ถ้าไม่มีให้เด้งออกทันที (จอยังมืดอยู่)
+            window.location.href = 'index.html'; 
         }
 
-        // 2. ดึงข้อมูลมาแสดงผล
+        // 2. ดึงข้อมูล
         document.addEventListener('DOMContentLoaded', () => {
             const fullName = sessionStorage.getItem('fullName');
             if(fullName) {
                 document.querySelector('.greeting').innerText = `สวัสดี คุณครู${fullName}`;
             }
-            
             fetchDashboardData();
         });
 
-        // 3. ฟังก์ชันดึงสถิติ
         function fetchDashboardData() {
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({
-                    action: "getDashboardStats",
-                    token: authToken
-                })
+                body: JSON.stringify({ action: "getDashboardStats", token: authToken })
             })
             .then(res => res.json())
             .then(data => {
@@ -98,7 +103,7 @@
             .catch(err => console.error("Data Fetch Error:", err));
         }
 
-        // 4. ระบบ Sidebar และนาฬิกา
+        // 3. ระบบ Sidebar และเวลา
         const toggleBtn = document.getElementById('toggleBtn');
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('mainContent');
@@ -116,12 +121,10 @@
             const now = new Date();
             const daysTh = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
             const monthsTh = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-
             const dayName = daysTh[now.getDay()];
             const d = now.getDate();
             const m = now.getMonth();
             const y = now.getFullYear() + 543;
-
             const h = String(now.getHours()).padStart(2, '0');
             const min = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
@@ -135,6 +138,20 @@
 
         setInterval(updateDateTime, 1000);
         updateDateTime();
+
+        // 4. [เพิ่มใหม่] ฟังก์ชันออกจากระบบ (Logout)
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if(confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) {
+                // ล้างข้อมูล Token และชื่อออกจากเบราว์เซอร์
+                sessionStorage.clear();
+                // เฟดหน้าจอมืดลงก่อนเด้งกลับไปหน้าแรก
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 500);
+            }
+        });
     </script>
 </body>
 </html>
