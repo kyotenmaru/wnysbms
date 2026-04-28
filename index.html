@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ | ระบบจัดการพฤติกรรมนักเรียน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="logo-box">
+            <img src="https://drive.google.com/file/d/1gdVia8qrc1oxI4tyfnqill71pWkla0-9/view?usp=drive_link" alt="โลโก้โรงเรียน">
+        </div>
+
+        <h2>ระบบจัดการพฤติกรรมนักเรียน</h2>
+        <p>Student Behavior Management System</p>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">ชื่อผู้ใช้งาน (Username)</label>
+                <input type="text" id="username" placeholder="กรอกชื่อผู้ใช้งาน" required autocomplete="username">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">รหัสผ่าน (Password)</label>
+                <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="login-btn">เข้าสู่ระบบ</button>
+
+            <div class="progress-wrapper" id="progressWrapper">
+                <div class="progress-container">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressStatus">กำลังเตรียมการ... 0%</span>
+            </div>
+        </form>
+
+        <div class="extra-links">
+            <a href="#" id="forgotPasswordBtn">ลืมรหัสผ่าน?</a>
+            <a href="#" id="contactAdminBtn">ติดต่อผู้ดูแลระบบ</a>
+        </div>
+    </div>
+
+    <script>
+        // เปลี่ยน URL ตรงนี้ให้เป็นของคุณเอง
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMVjqBp_7cv_YriUZbSF3cbzaMqzrKNKRtUvdIGOEuQ73N_Ye2T7v0NlDUVoZJ4wkP/exec';
+
+        // ระบบแจ้งเตือน (Toast Notification)
+        function showToast(message, type = 'error', duration = 3000) {
+            let container = document.getElementById('toastContainerUI');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toastContainerUI';
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span class="material-symbols-rounded" style="font-size: 20px;">${type === 'success' ? 'check_circle' : 'error'}</span> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const btn = document.querySelector('.login-btn');
+            const wrapper = document.getElementById('progressWrapper');
+            const fill = document.getElementById('progressFill');
+            const status = document.getElementById('progressStatus');
+
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            wrapper.style.display = "block";
+
+            const updateProgress = (percent, text) => {
+                fill.style.width = percent + "%";
+                status.innerText = `${text}... ${percent}%`;
+            };
+
+            updateProgress(20, "กำลังเชื่อมต่อเซิร์ฟเวอร์");
+
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            setTimeout(() => updateProgress(50, "กำลังตรวจสอบสิทธิ์"), 500);
+
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: "login", username: user, password: pass })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    updateProgress(85, "ยืนยันตัวตนสำเร็จ");
+                    
+                    setTimeout(() => {
+                        updateProgress(100, "กำลังนำเข้าสู่ระบบ");
+                        
+                        sessionStorage.setItem('authToken', data.token);
+                        sessionStorage.setItem('fullName', data.fullName);
+                        sessionStorage.setItem('role', data.role);
+                        sessionStorage.setItem('roleLevel', data.roleLevel || 1);
+                        sessionStorage.setItem('responsibility', data.responsibility || "");
+                        
+                        // ทำ Transition Fade-out ก่อนเปลี่ยนหน้า
+                        setTimeout(() => {
+                            document.body.classList.add('fade-out');
+                            setTimeout(() => {
+                                window.location.href = 'main.html';
+                            }, 500);
+                        }, 500);
+
+                    }, 600);
+                } else {
+                    showToast(data.message, "error");
+                    resetLogin();
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์", "error");
+                resetLogin();
+            });
+
+            function resetLogin() {
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                wrapper.style.display = "none";
+                fill.style.width = "0%";
+            }
+        });
+    </script>
+</body>
+</html>
